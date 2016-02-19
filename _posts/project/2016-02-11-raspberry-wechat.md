@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      基于树莓派的微信服务器
-category: project
+category:   project
 description: 基于树莓派的微信服务器
 ---
 ##微信公众平台
