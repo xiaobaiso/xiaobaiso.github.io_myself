@@ -16,28 +16,28 @@ description: 关于树莓派的基本配置
 这个也简单，很好配置的。windows下使用VNCViewer，ubuntu这一边的话，安装上apt-get install vcn4server 就好了。 然后运行vncserver :1 这样端口号就是5901，然后启动就可以了。如果要连接桌面，vim /root/.vnc/xstartup    注意：vnc也是可以结合花生壳的
 将其内容设置为：
 
-{% if site.uyan %}
- #!/bin/sh 
+
+    #!/bin/sh 
  
- # Uncomment the following two lines fornormal desktop: (去掉以下两行的#就可以允许使用桌面了)
-unset SESSION_MANAGER
+    # Uncomment the following two lines fornormal desktop: (去掉以下两行的#就可以允许使用桌面了)
+    unset SESSION_MANAGER
 
-exec /etc/X11/xinit/xinitrc
+    exec /etc/X11/xinit/xinitrc
 
-[ -x /etc/vnc/xstartup ] && exec/etc/vnc/xstartup
+    [ -x /etc/vnc/xstartup ] && exec/etc/vnc/xstartup
 
-[ -r $HOME/.Xresources ] && xrdb$HOME/.Xresources
+    [ -r $HOME/.Xresources ] && xrdb$HOME/.Xresources
 
-xsetroot -solid grey
+    xsetroot -solid grey
 
-vncconfig -iconic &
+    vncconfig -iconic &
 
- #xterm -geometry 80x24+10+10 -ls -title"$VNCDESKTOP Desktop" &
+    #xterm -geometry 80x24+10+10 -ls -title"$VNCDESKTOP Desktop" &
 
- #twm & ---把这两行注释掉，加上
+    #twm & ---把这两行注释掉，加上
 
-gnome-session &
-{% endif %}
+    gnome-session &
+
 
 这样就好了。
 这里也有配置文件，也都好办，拿我的配置文件一顶替就好了。
@@ -65,7 +65,9 @@ gnome-session &
 
 ##制作家庭下载服务器
 想法很简单，就是让他实现类似于小米路由器内置的下载功能，而这个功耗不大，完成可以承载24小时不间断的下载任务，找了下，linux下载的工具也是有不少，但是一用就发现完全没资源，这就很纠结了，最后还是决定用迅雷下载。
-linux下有一个迅雷的固件，封装安装后就好了，参考办法：http://www.chinagtd.com/archives/xunleipi.html
+
+linux下有一个迅雷的固件，封装安装后就好了，[参考办法](http://www.chinagtd.com/archives/xunleipi.html)  
+
 __注意，这个东西启动居然要root权限，还不开源。。。。我忍你很久了。。。__
 
 
