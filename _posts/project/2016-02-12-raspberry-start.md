@@ -16,8 +16,9 @@ description: 关于树莓派的基本配置
 这个也简单，很好配置的。windows下使用VNCViewer，ubuntu这一边的话，安装上apt-get install vcn4server 就好了。 然后运行vncserver :1 这样端口号就是5901，然后启动就可以了。如果要连接桌面，vim /root/.vnc/xstartup    注意：vnc也是可以结合花生壳的
 将其内容设置为：
 
-
+{% if site.uyan %}
  #!/bin/sh 
+ 
  # Uncomment the following two lines fornormal desktop: (去掉以下两行的#就可以允许使用桌面了)
 unset SESSION_MANAGER
 
@@ -36,7 +37,7 @@ vncconfig -iconic &
  #twm & ---把这两行注释掉，加上
 
 gnome-session &
-
+{% endif %}
 
 这样就好了。
 这里也有配置文件，也都好办，拿我的配置文件一顶替就好了。
@@ -69,12 +70,6 @@ __注意，这个东西启动居然要root权限，还不开源。。。。我�
 
 
 
-{% if site.uyan %}
-    <!-- UY BEGIN -->
-    <div id="uyan_frame"></div>
-    <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2066802"></script>
-    <!-- UY END -->
-{% endif %}
 
 
 
