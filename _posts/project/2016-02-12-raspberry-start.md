@@ -1,4 +1,7 @@
 ---
+layout:     post
+title:      关于树莓派的基本配置
+category: project
 description: 关于树莓派的基本配置
 ---
 ##有关于系统和分区
