@@ -18,24 +18,15 @@ description: 关于树莓派的基本配置
 
 
     #!/bin/sh 
- 
     # Uncomment the following two lines fornormal desktop: (去掉以下两行的#就可以允许使用桌面了)
     unset SESSION_MANAGER
-
     exec /etc/X11/xinit/xinitrc
-
     [ -x /etc/vnc/xstartup ] && exec/etc/vnc/xstartup
-
     [ -r $HOME/.Xresources ] && xrdb$HOME/.Xresources
-
     xsetroot -solid grey
-
     vncconfig -iconic &
-
     #xterm -geometry 80x24+10+10 -ls -title"$VNCDESKTOP Desktop" &
-
     #twm & ---把这两行注释掉，加上
-
     gnome-session &
 
 
