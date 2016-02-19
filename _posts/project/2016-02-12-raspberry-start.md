@@ -69,7 +69,12 @@ __注意，这个东西启动居然要root权限，还不开源。。。。我�
 
 
 
-
+{% if site.uyan %}
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2066802"></script>
+    <!-- UY END -->
+{% endif %}
 
 
 
