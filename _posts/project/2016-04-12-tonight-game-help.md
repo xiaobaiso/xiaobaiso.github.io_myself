@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 今夜游戏的玩法及其帮助文档
-category: opinion
+category: project
 description:今夜游戏帮助
 ---
 
