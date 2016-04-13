@@ -1,8 +1,8 @@
 ---
 layout: post
-title: 今夜游戏的玩法及其帮助文档
+title: 今夜游戏帮助
 category: opinion
-description:今夜游戏帮助
+description: 今夜游戏帮助
 ---
 
 ##游戏总介
