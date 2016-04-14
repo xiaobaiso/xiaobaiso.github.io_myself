@@ -24,34 +24,14 @@ description: 今夜游戏帮助
 
   猜测和自己同一阵营的总人数|   \| 得分
 ----|------
-1人(仅自己)  | 5分  
-2-3人 		| 3分  
-4-6人 		| 2分  
-7-10人 		| 1分
-11人(全体玩家) | 4分
+1人(仅自己)  |\|5分  
+2-3人 		| \|3分  
+4-6人 		| \|2分  
+7-10人 		|\|1分
+11人(全体玩家) \||4分
 
 
-表头1  | 表头2
-------------- | -------------
-Content Cell  | Content Cell
-Content Cell  | Content Cell
 
-| 表头1  | 表头2|
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
-| 名字 | 描述          |
-| ------------- | ----------- |
-| Help      | Display the help window.|
-| Close     | Closes a window     |
-
-表格中也可以使用普通文本的删除线，斜体等效果
-
-| 名字 | 描述          |
-| ------------- | ----------- |
-| Help      | ~~Display the~~ help window.|
-| Close     | _Closes_ a window     
 
 
 .
