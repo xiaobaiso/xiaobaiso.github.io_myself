@@ -4,15 +4,15 @@ title:      关于树莓派的基本配置
 category: project
 description: 关于树莓派的基本配置
 ---
-##有关于系统和分区
+## 有关于系统和分区
 用的是mac下命令烧写系统ubuntu，官方推荐pi2用这个比较好，我就下了官方最新版本的ubuntu mate版本
 ，关于分区是这样的，安装好是剩下了11G的空间未分配，好多网上介绍的时候都只是对自己做个记录，看的云里雾里，我这么操作：把sb卡拿出来到读卡器里面去放到linux下用fdisk看，比如说在linux下是sdc 那么一看就有两个分区，一个是swap，还有一个是主分区，把主分区删除了，记住start块地址，然后加一个分区，命令：按n（加分区），选择P (主要)，於分区2选择2，第一空格输入原来分区2的开始位置，最后的空格输入默认值，然后w 保存，sudo resize2fs /dev/sdc2 这样就ok了，吧卡插到树莓派中，分区已经扩展了。
 
 
-##制作samba
+## 制作samba
 首先先apt-get install samba下来，然后这个配置文件已经备份了，原版的也有，目前是不需要确认身份的。这个配置一下就好了，服务命令：service smbd restart，具体配置文件稍后放出网盘，顶替原有的就可以。
 
-##使用vnc
+## 使用vnc
 这个也简单，很好配置的。windows下使用VNCViewer，ubuntu这一边的话，安装上apt-get install vcn4server 就好了。 然后运行vncserver :1 这样端口号就是5901，然后启动就可以了。如果要连接桌面，vim /root/.vnc/xstartup    注意：vnc也是可以结合花生壳的
 将其内容设置为：
 
@@ -34,15 +34,19 @@ description: 关于树莓派的基本配置
 这里也有配置文件，也都好办，拿我的配置文件一顶替就好了。
 这是本地的VCN显示：
 
-![vnc](http://7xr0og.com1.z0.glb.clouddn.com/Screenshot-4.png =300x230 "这是vnc的图标")![vnc](http://7xr0og.com1.z0.glb.clouddn.com/Screenshot-3.png =300x230 "这是vnc的图标")
+![vnc](http://7xr0og.com1.z0.glb.clouddn.com/Screenshot-4.png)
+
+![vnc](http://7xr0og.com1.z0.glb.clouddn.com/Screenshot-3.png )
 这是远程的VCN显示，走了外网：
 
-![vnc](http://7xr0og.com1.z0.glb.clouddn.com/Screenshot.png =300x230 "这是vnc的图标")![vnc](http://7xr0og.com1.z0.glb.clouddn.com/Screenshotdesktop.png =300x230 "这是vnc的图标")
+![vnc](http://7xr0og.com1.z0.glb.clouddn.com/Screenshot.png )
+
+![vnc](http://7xr0og.com1.z0.glb.clouddn.com/Screenshotdesktop.png )
 
 看到vnc环境下显示效果，果断放弃掉用来构建无线家庭媒体中心的想法，这玩意还真不行。
 
 走外网的vnc虽然显示效果不佳，但是用来处理下邮件，写个word还是没有什么问题，带宽占用不是很大（vnc有显示参数，可以调节）。
-##制作花生壳的远程ssh
+## 制作花生壳的远程ssh
 话说这个搞了一下，容我想想：
 因为22端口经常被运营商封掉，所以要改成新端口共享出来。
 
