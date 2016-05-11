@@ -59,7 +59,9 @@ description: 关于树莓派的基本配置
 另外要绑定域名的可以考虑namecheap上买，价钱还行，[这里是绑定A地址的办法](https://www.namecheap.com/support/knowledgebase/article.aspx/319/78/)  
 
 
-##制作家庭下载服务器
+
+## 制作家庭下载服务器
+
 想法很简单，就是让他实现类似于小米路由器内置的下载功能，而这个功耗不大，完成可以承载24小时不间断的下载任务，找了下，linux下载的工具也是有不少，但是一用就发现完全没资源，这就很纠结了，最后还是决定用迅雷下载。
 
 linux下有一个迅雷的固件，封装安装后就好了，[参考办法](http://www.chinagtd.com/archives/xunleipi.html)  
