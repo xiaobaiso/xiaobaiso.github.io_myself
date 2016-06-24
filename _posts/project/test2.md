@@ -172,13 +172,43 @@ dispatch_group_async(_loggingGroup, loggerNode->_loggerQueue, ^{ @autoreleasepoo
 
 实际上是重载了DDAbstractLogger的方法，其实这里我们自己要写一个logger，同样继承这个就好了。
 
-重点看下DDFileLogger,可以看下currentLogFileHandle和maybeRollLogFileDueToSize，了解文件的切分和定时任务的指派。差不多就是这些
+现在着重看一下DDFileLogger，我们需要做两个事情，一个是定制合适的文件名，一个是修改log存放路径。这里要注意一个类_logFileManager
+
+```
+@interface DDFileLogger () {
+    __strong id <DDLogFileManager> _logFileManager;
+    
+    DDLogFileInfo *_currentLogFileInfo;
+    NSFileHandle *_currentLogFileHandle;
+    
+    dispatch_source_t _currentLogFileVnode;
+    dispatch_source_t _rollingTimer;
+    
+    unsigned long long _maximumFileSize;
+    NSTimeInterval _rollingFrequency;
+}
+```
+对文件的存储，名字的自定义需要继承DDLogFileManager，在CocoaLumberjack的实现里，发现其又封装了一个接口DDLogFileManagerDefault，那么我们想要对文件管控就继承DDLogFileManagerDefault就可以了。继承后主要复写如下两个函数：
+
+```
+-(NSString *)newLogFileName 
+- (BOOL)isLogFile:(NSString *)fileName
+```
+我在[Stack Overflow](http://stackoverflow.com/questions/19857508/cocoalumberjack-ios-can-we-change-the-logfile-name-and-directory)看到回答是需要将isLogFile返回NO来确保每次创建新文件，但是仔细一想发现不对，如果app在较短时间内重启两次，那么第二次的日志是需要接在上一次的日志末尾的，而不是每次都要创建一个新的文件。而创建文件的时机完全可以通过自身的rolling来解决。按照这个思路再看了一遍isLogFile的相关代码，发现这里是对格式校验，发现是符合自己格式的文件则算是找到，在其末尾加上日志。
+
+那么我也在这里复写这个方法，另外在复写logFileDateFormatter函数，从而达到目的。
+
+想到这里就想看一下他是怎么找自身日志文件的，原来以为会出去文件名的时间戳，然后减去一个rolling的周期，来判断要不要继续写下去。但是测试了一下发现不对，它是按照文件的创建时间来断定的,我创建了一个文件aa，然后将isLogFile返回YES，居然在aa里打日志了。。。。。
+
+    touch -t 200910112200 filename
+这里创建的文件名即使是当前时间，也不会添加到这里，原因是创建日期被修改到2009年。
+
+另外这一块代码在unsortedLogFileInfos里面有介绍，具体就不仔细看了。重点看下DDFileLogger,可以看下currentLogFileHandle和maybeRollLogFileDueToSize，了解文件的切分和定时任务的指派。差不多就是这些。
 
 另外对于DDLoggerNode，其实可以认为是对DDLogger的一层封装，这个可以过一下
 
 ## 附
-实际使用的时候发现了不少不爽的地方，这里做了修改
-修改文件名的时区：这个算是Bug？
+实际使用的时候发现了不少不爽的地方
 
 ```
 - (NSString *)newLogFileName {
@@ -215,5 +245,12 @@ dispatch_group_async(_loggingGroup, loggerNode->_loggerQueue, ^{ @autoreleasepoo
 
 [DDLog addLogger:self.fileLogger];
 
+```
+
+
+在Debug的时候，如果单步调试，则会出现运行过这个日志的时候不打印日志，原因是异步输出，另一个线程会在合适的时候输出（DDFileLogger，DDASLLogger，@DDTTYLoyger内部做了同步，只要一个没结束都还要等待），这里考虑到方便性，我在这段代码里做了同步，这样就会等待这行日志输出后才会走到下一步了。（影响性能，但是毕竟是Debug等级）
+
+```
+#define DDLogDebug(frmt, ...)   LOG_MAYBE(NO,                RLogLevel, RO_LOG_FLAG_DEBUG,   RO_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
 ```
 
