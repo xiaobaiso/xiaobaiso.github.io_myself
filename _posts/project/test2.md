@@ -22,10 +22,17 @@ CocoaLumberjack是一个iOS/OSX 下的一个日志系统，据说比原生的NSL
  
  这3个是日志的输出流器，用户可以自行决定是否需要注册这些，个人认为DDASLLogger是没有必要的，因为这个实际上输出到苹果的/var/log/messagelog下面去的，所以这个可以不注册
  
- 
+<img src="http://7xr0og.com1.z0.glb.clouddn.com/DDLog1.png" width="70%" height="70%">
  
  
  所有的log都通过DDLog进行分发，在DDLog这里已经将整个message日志进行了打包，并且区分同步异步，然后丢到DDLog下的GCD队列中，队列会将日志丢到各个解析器中去解析。每个 Logger 处理收到的 log 也是在它们自己的 GCD队列下（loggingQueue）做的，它们询问其下的 Formatter，获取 Log 消息格式，然后最终根据 Logger 完成最终的输出。
+ 
+ <img src="http://7xr0og.com1.z0.glb.clouddn.com/DDLog2.png" width="70%" height="70%">
+ 
+ 
+ 整体架构：
+ 
+ <img src="http://7xr0og.com1.z0.glb.clouddn.com/DDlog3.png" width="70%" height="70%">
  
 ## 代码走读
 经过宏解析到
@@ -105,7 +112,7 @@ CocoaLumberjack是一个iOS/OSX 下的一个日志系统，据说比原生的NSL
  }
 ```
 说到这里，有必要将这个枚举贴出来：
-我们一般用位移来做这个，但是这样写，简直是清晰明了。
+我们一般用位移来做这个，但是这样写，简直是清晰明了高大上。
 
 ```
 typedef NS_ENUM(NSUInteger, DDLogLevel){
