@@ -6,7 +6,7 @@ description: 开源日志系统的介绍
 ---
 
 ## 关于日志系统
-CocoaLumberjack是一个iOS/OSX 下的一个日志系统，据说比原生的NSLog要快很多倍，我这段时间正好要用上，走读了一下代码，仅作记录。
+CocoaLumberjack是一个iOS/OSX 下的一个日志系统，据说比原生的NSLog要快很多倍，CocoaLumberjack是Mac和iOS上一个集快捷、简单、强大和灵活于一身的日志框架。CocoaLumberjack类似于流行的日志框架（如log4j），但它是专为Objective-C设计的，利用了多线程、GCD（如果可用）、无锁原子操作Objective-C运行时的动态特性。我这段时间正好要用上，走读了一下代码，仅作记录。
 
 ## 简单介绍
 [CocoaLumberjack](https://github.com/CocoaLumberjack/CocoaLumberjack)是一个扩展性较好的一个日志开源框架，以总DDLog为对面接口，内部采用了基于不同的流向的logger来拆分具体的实现，用户可以仅仅使用其中某一个logger来记录，也可以多个logger同时记录，甚至自己注册一个logger来达到自己的目的，达到记录日志的功能。
@@ -34,12 +34,75 @@ CocoaLumberjack是一个iOS/OSX 下的一个日志系统，据说比原生的NSL
  
  <img src="http://7xr0og.com1.z0.glb.clouddn.com/DDlog3.png" width="70%" height="70%">
  
+ 
+ 
+ 
+## 配置
+第一件事情你要做的是在你applicationDidFinishLaunching方法中注册你所需要的日志组件，通用配置是：
+
+　[DDLog addLogger:[DDASLLogger sharedInstance]];
+  [DDLog addLogger:[DDTTYLogger sharedInstance]];
+
+
+至于DDFileLogger，这个需要配置其超时刷入的时间，形成一个文件的时间等。需要配置文件路径需要继承DDLogFileManagerDefault，然后在documentsFileManager配置路径。若要修改文件名，则需要在BaseLogFileManager里面复写父类的- (BOOL)isLogFile:(NSString *)fileName;-(NSString *)newLogFileName等方法。
+
+```
+//这里BaseLogFileManager继承DDLogFileManagerDefault
+ BaseLogFileManager *documentsFileManager = [[BaseLogFileManager alloc] init];
+ _fileLogger = [[DDFileLogger alloc] initWithLogFileManager:documentsFileManager];
+ _fileLogger.rollingFrequency = 24 * 60 * 60; // 24 hour 将文件打包，再开写下一个文件
+ _fileLogger.logFileManager.maximumNumberOfLogFiles = 7;//保留七天的日志
+ [DDLog addLogger:_fileLogger];
+```
+
+第二件事是配置全局日志等级：
+
+RO_LOG_LEVEL_OFF
+
+RO_LOG_LEVEL_ERROR
+
+RO_LOG_LEVEL_WARN
+
+RO_LOG_LEVEL_INFO
+
+RO_LOG_LEVEL_DEBUG
+
+RO_LOG_LEVEL_VERBOSE
+
+等级从下至上越来越严格，使用：
+
+RLogLevel =  RO_LOG_LEVEL_INFO 即可全局配置。
+
+## 使用
+使用接口比较简单，将NSLog替换为如下几个等级接口即可：
+
+RLogError
+
+RLogWarn
+
+RLogInfo
+
+RLogDebug
+
+RLogVerbose
+
+如：
+
+NSLog(@"App Crashed, name : %@ ", name);
+
+替换为：
+
+RLogInfo(@"App Crashed, name : %@ ", name);
+ 
+ 
 ## 代码走读
 经过宏解析到
 
 ```
 - (void)queueLogMessage:(DDLogMessage *)logMessage asynchronously:(BOOL)asyncFlag 
 ```
+
+在其中涉及到第一个同步，即加队列同步，在工程中有一个同步队列，长度1000，使用信号量来控制，若超出队列则卡住当前调用日志的线程，直到可以加入队列为止。
 
 在这里做了这么几件事，一个是讲日志入DDLog的队列，而这个队列长度有限，默认1000，这里做了一个信号量，主要是为了保证队列最大数不会被超出。一般情况下1000条日志确实不会在同一时间出现，而且只有ERROR等级的日志才会被同步输出，其他等级的日志异步输出。我测试了一下，将队列改小，且换成ERROR等级日志，那么如果超出的数过大，确实会造成当前的打印日志的线程阻塞。
 
@@ -104,7 +167,7 @@ CocoaLumberjack是一个iOS/OSX 下的一个日志系统，据说比原生的NSL
 - (void)lt_log:(DDLogMessage *)logMessage
 ```
 
-这里判断多核处理器后，遍历之前注册的loggers，判断message的等级是否达到logger的输出等级。
+这里判断多核处理器后，遍历之前注册的loggers，判断message的等级是否达到logger的输出等级,并且控制第二次同步，即当你注册多个Logger的时候，使用GCD中的group来控制同步返回，确保这个事件的多个Logger都成功后才退出。
 
 ```
  if (!(logMessage->_flag & loggerNode->_level)) {
@@ -210,47 +273,24 @@ dispatch_group_async(_loggingGroup, loggerNode->_loggerQueue, ^{ @autoreleasepoo
 ## 附
 实际使用的时候发现了不少不爽的地方
 
-```
-- (NSString *)newLogFileName {
-    NSString *appName = [self applicationName];
-    NSDate *date = [NSDate date];  
-    NSTimeZone *zone = [NSTimeZone systemTimeZone];
-    NSInteger interval = [zone secondsFromGMTForDate: date];
-    NSDate *localeDate = [date  dateByAddingTimeInterval: interval];
-    NSDateFormatter *dateFormatter = [self logFileDateFormatter];
-    NSString *formattedDate = [dateFormatter stringFromDate:localeDate];
-
-    return [NSString stringWithFormat:@"%@ %@.log", appName, formattedDate];
-}
-```
-
-修改log的指定位置：
-
-```
-//这里isChangeToLibrary为NO，则这里日志是放到默认的cache里面，如果要放到library里面，则需要
--(DDFileLogger *)fileLogger{
-    if (!_fileLogger) {
-        if (self.isChangeToLibrary) {
-            NSString * applicationDocumentsDirectory = [[[[NSFileManager defaultManager]
-                                                          URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject] path];
-            DDLogFileManagerDefault *documentsFileManager = [[DDLogFileManagerDefault alloc]
-                                                             initWithLogsDirectory:applicationDocumentsDirectory];
-            _fileLogger = [[DDFileLogger alloc] initWithLogFileManager:documentsFileManager];
-        }else{
-            _fileLogger = [[DDFileLogger alloc] init];
-        }
-    }
-    return _fileLogger;
-}
-
-[DDLog addLogger:self.fileLogger];
-
-```
-
-
-在Debug的时候，如果单步调试，则会出现运行过这个日志的时候不打印日志，原因是异步输出，另一个线程会在合适的时候输出（DDFileLogger，DDASLLogger，@DDTTYLoyger内部做了同步，只要一个没结束都还要等待），这里考虑到方便性，我在这段代码里做了同步，这样就会等待这行日志输出后才会走到下一步了。（影响性能，但是毕竟是Debug等级）
+1.在Debug的时候，如果单步调试，则会出现运行过这个日志的时候不打印日志，原因是异步输出，另一个线程会在合适的时候输出（DDFileLogger，DDASLLogger，@DDTTYLoyger内部做了同步，只要一个没结束都还要等待），这里考虑到方便性，我在这段代码里做了同步，这样就会等待这行日志输出后才会走到下一步了。（影响性能，但是毕竟是Debug等级）
 
 ```
 #define DDLogDebug(frmt, ...)   LOG_MAYBE(NO,                RLogLevel, RO_LOG_FLAG_DEBUG,   RO_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
+```
+
+2.在默认情况下，使用RLogError会同步输出日志，使用其他等级的接口将异步输出日志。如果单步调试，异步日志是不会立即输出的。若需要同步输出，在头文件中也可以做修改。
+
+3.代码中Debug以及Verbose会打印出行号，函数名等信息，具体格式为
+
+```
+ FileName | FunName @LineNumber
+ ```
+ 
+例：
+
+```
+2016-06-27 16:22:04.218 [XXX]: FileLogPath = 1
+2016-06-27 16:23:04.632 [XXX]: Manager | -[Manager initLogger] @74 | FileLogPath = 1
 ```
 
