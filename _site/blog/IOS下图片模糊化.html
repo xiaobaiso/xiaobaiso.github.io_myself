@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title>IOS下的图片模糊化模糊化</title>
+  <meta name="description" content="起因最近在模仿苹果端网易云音乐客户端，在进入音乐那里特别喜欢图片毛玻璃的效果，这个看了下网上，有开源的设计，但是封装的很蛋疼，而且最恶心的是，为啥接口和实现不分开呢。基于这点，我对实现进行了封装。">
+  <meta name="author" content="zengjing">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="IOS下的图片模糊化模糊化">
+  <meta name="twitter:description" content="起因最近在模仿苹果端网易云音乐客户端，在进入音乐那里特别喜欢图片毛玻璃的效果，这个看了下网上，有开源的设计，但是封装的很蛋疼，而且最恶心的是，为啥接口和实现不分开呢。基于这点，我对实现进行了封装。">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="IOS下的图片模糊化模糊化">
+  <meta property="og:description" content="起因最近在模仿苹果端网易云音乐客户端，在进入音乐那里特别喜欢图片毛玻璃的效果，这个看了下网上，有开源的设计，但是封装的很蛋疼，而且最恶心的是，为啥接口和实现不分开呢。基于这点，我对实现进行了封装。">
+  
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+  <link href="/assets/images/favicon.png" rel="shortcut icon" type="image/png">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="canonical" href="http://xiaobaiso.github.io/blog/IOS%E4%B8%8B%E5%9B%BE%E7%89%87%E6%A8%A1%E7%B3%8A%E5%8C%96.html">
+  <link rel="alternate" type="application/rss+xml" title="小白的技术宅" href="http://xiaobaiso.github.io/feed.xml">
+  
+  <meta name="google-site-verification" content="1-1ZlHoRvM0T2FqPbW2S-qLgYXN6rsn52kErlMPd_gw" />
+
+  <script>
+  	var _hmt = _hmt || [];
+	(function() {
+  		var hm = document.createElement("script");
+  		hm.src = "//hm.baidu.com/hm.js?9bd8b5838b97bdb84f93cef73b8878a9";
+  		var s = document.getElementsByTagName("script")[0]; 
+  		s.parentNode.insertBefore(hm, s);
+	})();
+  </script>
+
+</head>
+
+
+  <body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+    
+    <header class="panel-cover panel-cover--collapsed" style="background-image: url('/assets/images/background-cover.jpg')">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/#blog" title="前往 小白的技术宅 的主页" class="blog-button"><img src="/assets/images/avatar.jpg" width="80" alt="小白的技术宅 logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/#blog" title="link to homepage for 小白的技术宅" class="blog-button">小白的技术宅</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">遇见更好的自己.</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">嗨，我是小白，从事Linux以及iOS相关的工作，目前暂居深圳。</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+        
+        <p class="panel-cover__description">这是我用来记录生活和技术的地方，欢迎你的访问.</p>
+        
+        
+        <div class="navigation-wrapper">
+          <div>
+            <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+                
+                  <li class="navigation__item"><a href="http://github.com/xiaobaiso" target="_blank" title="了解相关项目">项目</a></li>
+                
+                  <li class="navigation__item"><a href="#" target="_blank" title="了解更多关于我">关于</a></li>
+                
+              </ul>
+            </nav>
+          </div>
+          
+          <div><nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  
+
+  
+  <!-- Github -->
+  <li class="navigation__item">
+    <a href="https://github.com/xiaobaiso" title="@xiaobaiso 的 Github" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+  
+  
+  
+
+  
+
+  <!-- RSS -->
+  <li class="navigation__item">
+    <a href="/feed.xml/" rel="author" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+  
+  <!-- Email -->
+  <li class="navigation__item">
+    <a href="mailto:xbcoding@gmail.com" title="Contact me">
+      <i class='social fa fa-envelope'></i>
+      <span class="label">Email</span>
+    </a>
+  </li>
+  
+
+  </ul>
+</nav>
+</div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="panel-cover--overlay cover-slate"></div>
+    
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2015-11-19 00:00:00 +0800" itemprop="datePublished" class="post-meta__date date">2015-11-19</time> &#8226; <span class="post-meta__tags tags"></span>
+    </div>
+    <h1 class="post-title">IOS下的图片模糊化模糊化</h1>
+  </header>
+
+  <section class="post">
+    <h2>起因</h2>
+
+<p>最近在模仿苹果端网易云音乐客户端，在进入音乐那里特别喜欢图片毛玻璃的效果，这个看了下网上，有开源的设计，但是封装的很蛋疼，而且最恶心的是，为啥接口和实现不分开呢。基于这点，我对实现进行了封装。</p>
+
+<h2>接口</h2>
+
+<p>初始化并设置蒙版的颜色</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">-(ANBlurredImageView *)initWithBlurAmount:(CGFloat)amount withTintColor:(UIColor *)color;
+</code></pre></figure>
+<p>默认的模糊化设置</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">-(void)blurredImageViewDefault;
+</code></pre></figure>
+<p>默认的清晰化的设置</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">-(void)blurredImageViewOutConfigDefault;
+</code></pre></figure>
+<p>带配置的模糊化配置</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">-(void)blurredImageViewInConfigWithBlurAmount:(NSInteger)blurAmount showTime:(CGFloat)time;
+</code></pre></figure>
+<p>清除模糊化过程中带来的动画渐变图片</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">-(void)blurredImageFinishAnimation;
+</code></pre></figure>
+<p>不产生渐变过程，直接生产模糊后的图片</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">-(UIImage *)blurredLastestImage;
+</code></pre></figure>
+<p>示例图片：</p>
+
+<p><img src="http://7xr0og.com1.z0.glb.clouddn.com/ios%E6%A8%A1%E7%B3%8A%E5%8C%96.gif" alt="图片"></p>
+
+<p><a href="https://github.com/xiaobaiso/BlurryImage">工程代码</a></p>
+
+  </section>
+</article>
+
+<section class="read-more">
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">最近的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/blog/raspberry-wechat.html" title="link to 基于树莓派的微信服务器">基于树莓派的微信服务器</a></h2>
+       <p class="excerpt">微信公众平台首先要去了解这个东西，去看官方的手册及博客，网上面关于微信公众号的后台接入有三个解决办法，使用微信推荐的后端平台，这个到公众号里面去找就能看到，这个相当于腾讯找人代理帮你搞定后端了。使用sae和gae这样的平台来部署自己的应用程序。使用自己的服务器，公有云独立ip。这三个办法都可以，网上介绍的一堆一堆的，在国内购买公有云手续比较复杂，我推荐用digitalocean，国外的服务器，推荐新加坡部署的服务器，使用我的推荐链接，注册成功后有10刀的返现，点击这里，拿好不谢。这个有点意...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2016-02-11 00:00:00 +0800" class="post-list__meta--date date">2016-02-11</time> &#8226; <span class="post-list__meta--tags tags"></span><a class="btn-border-small" href=/blog/raspberry-wechat.html>继续阅读</a></div>
+   </div>
+   
+   
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">更早的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/blog/raspberry-start.html" title="link to 关于树莓派的基本设置">关于树莓派的基本设置</a></h2>
+       <p class="excerpt">有关于系统和分区用的是mac下命令烧写系统ubuntu，官方推荐pi2用这个比较好，我就下了官方最新版本的ubuntu mate版本，关于分区是这样的，安装好是剩下了11G的空间未分配，好多网上介绍的时候都只是对自己做个记录，看的云里雾里，我这么操作：把sb卡拿出来到读卡器里面去放到linux下用fdisk看，比如说在linux下是sdc 那么一看就有两个分区，一个是swap，还有一个是主分区，把主分区删除了，记住start块地址，然后加一个分区，命令：按n（加分区），选择P (主要)，於...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2015-10-10 12:15:00 +0800" class="post-list__meta--date date">2015-10-10</time> &#8226; <span class="post-list__meta--tags tags">关于树莓派的基本设置</span><a class="btn-border-small" href=/blog/raspberry-start.html>继续阅读</a></div>
+   </div>
+   
+</section>
+
+<section class="post-comments">
+  
+  
+  
+  
+</section>
+
+
+            <section class="footer">
+    <footer>
+    	<span class="footer__copyright">本站点采用<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享 署名-非商业性使用-相同方式共享 4.0 国际 许可协议</a></span>
+        <span class="footer__copyright">由 <a href="https://jekyllrb.com">Jekyll</a> 于 2016-07-19 生成，感谢<a href="https://gitcafe.com/signup?invited_by=zengjing">GitCafe</a>和<a href="https://github.com">GitHub</a>为本站提供存储空间.</span>
+        <span class="footer__copyright">本站由 <a href="http://xiaobaiso.me">@xiaobaiso</a> 创建，采用 <a href="https://github.com/onevcat/vno-jekyll">Vno - Jekyll</a> 作为主题，您可以在 GitHub 找到<a href="https://github.com/hhtczengjing/hhtczengjing.github.com">本站源码</a> - &copy; 2016</span>
+    </footer>
+</section>
+
+
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript" src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+    
+  </body>
+
+</html>

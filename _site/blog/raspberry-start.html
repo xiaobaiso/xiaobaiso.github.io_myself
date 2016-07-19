@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title>关于树莓派的基本设置</title>
+  <meta name="description" content="有关于系统和分区用的是mac下命令烧写系统ubuntu，官方推荐pi2用这个比较好，我就下了官方最新版本的ubuntu mate版本，关于分区是这样的，安装好是剩下了11G的空间未分配，好多网上介绍的时候都只是对自己做个记录，看的云里雾里，我这么操作：把sb卡拿出来到读卡器里面去放到linux下用fdisk看，比...">
+  <meta name="author" content="zengjing">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="关于树莓派的基本设置">
+  <meta name="twitter:description" content="有关于系统和分区用的是mac下命令烧写系统ubuntu，官方推荐pi2用这个比较好，我就下了官方最新版本的ubuntu mate版本，关于分区是这样的，安装好是剩下了11G的空间未分配，好多网上介绍的时候都只是对自己做个记录，看的云里雾里，我这么操作：把sb卡拿出来到读卡器里面去放到linux下用fdisk看，比...">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="关于树莓派的基本设置">
+  <meta property="og:description" content="有关于系统和分区用的是mac下命令烧写系统ubuntu，官方推荐pi2用这个比较好，我就下了官方最新版本的ubuntu mate版本，关于分区是这样的，安装好是剩下了11G的空间未分配，好多网上介绍的时候都只是对自己做个记录，看的云里雾里，我这么操作：把sb卡拿出来到读卡器里面去放到linux下用fdisk看，比...">
+  
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+  <link href="/assets/images/favicon.png" rel="shortcut icon" type="image/png">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="canonical" href="http://xiaobaiso.github.io/blog/raspberry-start.html">
+  <link rel="alternate" type="application/rss+xml" title="小白的技术宅" href="http://xiaobaiso.github.io/feed.xml">
+  
+  <meta name="google-site-verification" content="1-1ZlHoRvM0T2FqPbW2S-qLgYXN6rsn52kErlMPd_gw" />
+
+  <script>
+  	var _hmt = _hmt || [];
+	(function() {
+  		var hm = document.createElement("script");
+  		hm.src = "//hm.baidu.com/hm.js?9bd8b5838b97bdb84f93cef73b8878a9";
+  		var s = document.getElementsByTagName("script")[0]; 
+  		s.parentNode.insertBefore(hm, s);
+	})();
+  </script>
+
+</head>
+
+
+  <body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+    
+    <header class="panel-cover panel-cover--collapsed" style="background-image: url('/assets/images/background-cover.jpg')">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/#blog" title="前往 小白的技术宅 的主页" class="blog-button"><img src="/assets/images/avatar.jpg" width="80" alt="小白的技术宅 logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/#blog" title="link to homepage for 小白的技术宅" class="blog-button">小白的技术宅</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">遇见更好的自己.</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">嗨，我是小白，从事Linux以及iOS相关的工作，目前暂居深圳。</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+        
+        <p class="panel-cover__description">这是我用来记录生活和技术的地方，欢迎你的访问.</p>
+        
+        
+        <div class="navigation-wrapper">
+          <div>
+            <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+                
+                  <li class="navigation__item"><a href="http://github.com/xiaobaiso" target="_blank" title="了解相关项目">项目</a></li>
+                
+                  <li class="navigation__item"><a href="#" target="_blank" title="了解更多关于我">关于</a></li>
+                
+              </ul>
+            </nav>
+          </div>
+          
+          <div><nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  
+
+  
+  <!-- Github -->
+  <li class="navigation__item">
+    <a href="https://github.com/xiaobaiso" title="@xiaobaiso 的 Github" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+  
+  
+  
+
+  
+
+  <!-- RSS -->
+  <li class="navigation__item">
+    <a href="/feed.xml/" rel="author" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+  
+  <!-- Email -->
+  <li class="navigation__item">
+    <a href="mailto:xbcoding@gmail.com" title="Contact me">
+      <i class='social fa fa-envelope'></i>
+      <span class="label">Email</span>
+    </a>
+  </li>
+  
+
+  </ul>
+</nav>
+</div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="panel-cover--overlay cover-slate"></div>
+    
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2015-10-10 12:15:00 +0800" itemprop="datePublished" class="post-meta__date date">2015-10-10</time> &#8226; <span class="post-meta__tags tags">关于树莓派的基本设置</span>
+    </div>
+    <h1 class="post-title">关于树莓派的基本设置</h1>
+  </header>
+
+  <section class="post">
+    <h3>有关于系统和分区</h3>
+
+<p>用的是mac下命令烧写系统ubuntu，官方推荐pi2用这个比较好，我就下了官方最新版本的ubuntu mate版本
+，关于分区是这样的，安装好是剩下了11G的空间未分配，好多网上介绍的时候都只是对自己做个记录，看的云里雾里，我这么操作：把sb卡拿出来到读卡器里面去放到linux下用fdisk看，比如说在linux下是sdc 那么一看就有两个分区，一个是swap，还有一个是主分区，把主分区删除了，记住start块地址，然后加一个分区，命令：按n（加分区），选择P (主要)，於分区2选择2，第一空格输入原来分区2的开始位置，最后的空格输入默认值，然后w 保存，sudo resize2fs /dev/sdc2 这样就ok了，吧卡插到树莓派中，分区已经扩展了。</p>
+
+<h2>制作samba</h2>
+
+<p>首先先apt-get install samba下来，然后这个配置文件已经备份了，原版的也有，目前是不需要确认身份的。这个配置一下就好了，服务命令：service smbd restart，具体配置文件稍后放出网盘，顶替原有的就可以。</p>
+
+<h2>使用vnc</h2>
+
+<p>这个也简单，很好配置的。windows下使用VNCViewer，ubuntu这一边的话，安装上apt-get install vcn4server 就好了。 然后运行vncserver :1 这样端口号就是5901，然后启动就可以了。如果要连接桌面，vim /root/.vnc/xstartup    注意：vnc也是可以结合花生壳的
+将其内容设置为：</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">#!/bin/sh 
+# Uncomment the following two lines fornormal desktop: (去掉以下两行的#就可以允许使用桌面了)
+unset SESSION_MANAGER
+exec /etc/X11/xinit/xinitrc
+[ -x /etc/vnc/xstartup ] &amp;&amp; exec/etc/vnc/xstartup
+[ -r $HOME/.Xresources ] &amp;&amp; xrdb$HOME/.Xresources
+xsetroot -solid grey
+vncconfig -iconic &amp;
+#xterm -geometry 80x24+10+10 -ls -title&quot;$VNCDESKTOP Desktop&quot; &amp;
+#twm &amp; ---把这两行注释掉，加上
+gnome-session &amp;
+</code></pre></figure>
+<p>这样就好了。
+这里也有配置文件，也都好办，拿我的配置文件一顶替就好了。
+这是本地的VCN显示：</p>
+
+<p><img src="http://7xr0og.com1.z0.glb.clouddn.com/Screenshot-4.png" alt="vnc"></p>
+
+<p><img src="http://7xr0og.com1.z0.glb.clouddn.com/Screenshot-3.png" alt="vnc">
+这是远程的VCN显示，走了外网：</p>
+
+<p><img src="http://7xr0og.com1.z0.glb.clouddn.com/Screenshot.png" alt="vnc"></p>
+
+<p><img src="http://7xr0og.com1.z0.glb.clouddn.com/Screenshotdesktop.png" alt="vnc"></p>
+
+<p>看到vnc环境下显示效果，果断放弃掉用来构建无线家庭媒体中心的想法，这玩意还真不行。</p>
+
+<p>走外网的vnc虽然显示效果不佳，但是用来处理下邮件，写个word还是没有什么问题，带宽占用不是很大（vnc有显示参数，可以调节）。</p>
+
+<h2>制作花生壳的远程ssh</h2>
+
+<p>话说这个搞了一下，容我想想：
+因为22端口经常被运营商封掉，所以要改成新端口共享出来。</p>
+
+<p>首先8块钱买一个花生壳的内网版，然后在官网上下载树莓派版本的压缩包，解压就可以用。然后就是<a href="http://service.oray.com/question/2680.html">这样</a>，这里面说的很详细，但是花生壳有个bug，就是你要在之前先是内网版的账号，然后设备再与这个账号绑定也变成了内网版，如果像我这样先申请了免费的公网版，然后再绑定设备，再升级为内网版，设备还他妈的是公网版。要都是内网版才能用。</p>
+
+<p>其次要去绑定花生壳的端口，这个简单，按照教程来，公开端口就是了，注意server上的防火墙要打开规则，这个网上已经将这些东西讲的很清楚了，配置好后可以远程连接ssh了。</p>
+
+<p>最后发现这个东西真亏，急急忙忙搞掉了8块钱，<strong>结果才只能绑定两个端口</strong>，我还以为无限的呢，我又受不了这种的，找了下发现有更好用的反向代理，就可以公开端口了，这真是简直了，还不要钱，我把我之前翻。墙的服务器拿出来代理了一下，就好用了，就是慢了点。反向代理的教程网上更是一把一把的，<strong>注意，把5901端口共享出来就可以开启远程桌面了</strong>。就是网不怎么样。</p>
+
+<p>另外要绑定域名的可以考虑namecheap上买，价钱还行，<a href="https://www.namecheap.com/support/knowledgebase/article.aspx/319/78/">这里是绑定A地址的办法</a>  </p>
+
+<h2>制作家庭下载服务器</h2>
+
+<p>想法很简单，就是让他实现类似于小米路由器内置的下载功能，而这个功耗不大，完成可以承载24小时不间断的下载任务，找了下，linux下载的工具也是有不少，但是一用就发现完全没资源，这就很纠结了，最后还是决定用迅雷下载。</p>
+
+<p>linux下有一个迅雷的固件，封装安装后就好了，<a href="http://www.chinagtd.com/archives/xunleipi.html">参考办法</a>  </p>
+
+<p><strong>注意，这个东西启动居然要root权限，还不开源。。。。我忍你很久了。。。</strong></p>
+
+  </section>
+</article>
+
+<section class="read-more">
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">最近的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/blog/IOS%E4%B8%8B%E5%9B%BE%E7%89%87%E6%A8%A1%E7%B3%8A%E5%8C%96.html" title="link to IOS下的图片模糊化模糊化">IOS下的图片模糊化模糊化</a></h2>
+       <p class="excerpt">起因最近在模仿苹果端网易云音乐客户端，在进入音乐那里特别喜欢图片毛玻璃的效果，这个看了下网上，有开源的设计，但是封装的很蛋疼，而且最恶心的是，为啥接口和实现不分开呢。基于这点，我对实现进行了封装。接口初始化并设置蒙版的颜色-(ANBlurredImageView *)initWithBlurAmount:(CGFloat)amount withTintColor:(UIColor *)color;默认的模糊化设置-(void)blurredImageViewDefault;默认的清晰化的设...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2015-11-19 00:00:00 +0800" class="post-list__meta--date date">2015-11-19</time> &#8226; <span class="post-list__meta--tags tags"></span><a class="btn-border-small" href=/blog/IOS%E4%B8%8B%E5%9B%BE%E7%89%87%E6%A8%A1%E7%B3%8A%E5%8C%96.html>继续阅读</a></div>
+   </div>
+   
+   
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">更早的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/blog/first.html" title="link to 我为什么写博客？">我为什么写博客？</a></h2>
+       <p class="excerpt">注我讲注解放到最上面来就是想告诉你们这群乱入的年轻人，以下全是一个大龄九零后傲娇言辞，建议你们速速离去，我只想说，没有被这篇文章而耽误生命的人真的是太好了。.第一篇Blog写博客的主要目的是什么，这往往是我一开始就想要说的。Github是一个开源技术社区，在这上面写博客往往是被贴上技术的标签，所以在这一层上看，将来的博客可能都将是关于技术，但也可能不是。不管怎样，我今天至少尝试在继续写博客而且跨出了一大步，至少这样看到还是挺好的。我是谁我是一个大龄九零后，目前在深圳从事桌面云相关开发，主要...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2015-10-10 12:15:00 +0800" class="post-list__meta--date date">2015-10-10</time> &#8226; <span class="post-list__meta--tags tags">为什么要在Github上写博客</span><a class="btn-border-small" href=/blog/first.html>继续阅读</a></div>
+   </div>
+   
+</section>
+
+<section class="post-comments">
+  
+  
+  
+  
+</section>
+
+
+            <section class="footer">
+    <footer>
+    	<span class="footer__copyright">本站点采用<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享 署名-非商业性使用-相同方式共享 4.0 国际 许可协议</a></span>
+        <span class="footer__copyright">由 <a href="https://jekyllrb.com">Jekyll</a> 于 2016-07-19 生成，感谢<a href="https://gitcafe.com/signup?invited_by=zengjing">GitCafe</a>和<a href="https://github.com">GitHub</a>为本站提供存储空间.</span>
+        <span class="footer__copyright">本站由 <a href="http://xiaobaiso.me">@xiaobaiso</a> 创建，采用 <a href="https://github.com/onevcat/vno-jekyll">Vno - Jekyll</a> 作为主题，您可以在 GitHub 找到<a href="https://github.com/hhtczengjing/hhtczengjing.github.com">本站源码</a> - &copy; 2016</span>
+    </footer>
+</section>
+
+
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript" src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+    
+  </body>
+
+</html>

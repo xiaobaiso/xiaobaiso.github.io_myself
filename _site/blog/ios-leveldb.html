@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title>iOS中KV数据库LevelDB的编译和使用</title>
+  <meta name="description" content="LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量...">
+  <meta name="author" content="zengjing">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="iOS中KV数据库LevelDB的编译和使用">
+  <meta name="twitter:description" content="LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量...">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="iOS中KV数据库LevelDB的编译和使用">
+  <meta property="og:description" content="LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量...">
+  
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+  <link href="/assets/images/favicon.png" rel="shortcut icon" type="image/png">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="canonical" href="http://xiaobaiso.github.io/blog/ios-leveldb.html">
+  <link rel="alternate" type="application/rss+xml" title="小白的技术宅" href="http://xiaobaiso.github.io/feed.xml">
+  
+  <meta name="google-site-verification" content="1-1ZlHoRvM0T2FqPbW2S-qLgYXN6rsn52kErlMPd_gw" />
+
+  <script>
+  	var _hmt = _hmt || [];
+	(function() {
+  		var hm = document.createElement("script");
+  		hm.src = "//hm.baidu.com/hm.js?9bd8b5838b97bdb84f93cef73b8878a9";
+  		var s = document.getElementsByTagName("script")[0]; 
+  		s.parentNode.insertBefore(hm, s);
+	})();
+  </script>
+
+</head>
+
+
+  <body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+    
+    <header class="panel-cover panel-cover--collapsed" style="background-image: url('/assets/images/background-cover.jpg')">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/#blog" title="前往 小白的技术宅 的主页" class="blog-button"><img src="/assets/images/avatar.jpg" width="80" alt="小白的技术宅 logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/#blog" title="link to homepage for 小白的技术宅" class="blog-button">小白的技术宅</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">遇见更好的自己.</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">嗨，我是小白，从事Linux以及iOS相关的工作，目前暂居深圳。</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+        
+        <p class="panel-cover__description">这是我用来记录生活和技术的地方，欢迎你的访问.</p>
+        
+        
+        <div class="navigation-wrapper">
+          <div>
+            <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+                
+                  <li class="navigation__item"><a href="http://github.com/xiaobaiso" target="_blank" title="了解相关项目">项目</a></li>
+                
+                  <li class="navigation__item"><a href="#" target="_blank" title="了解更多关于我">关于</a></li>
+                
+              </ul>
+            </nav>
+          </div>
+          
+          <div><nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  
+
+  
+  <!-- Github -->
+  <li class="navigation__item">
+    <a href="https://github.com/xiaobaiso" title="@xiaobaiso 的 Github" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+  
+  
+  
+
+  
+
+  <!-- RSS -->
+  <li class="navigation__item">
+    <a href="/feed.xml/" rel="author" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+  
+  <!-- Email -->
+  <li class="navigation__item">
+    <a href="mailto:xbcoding@gmail.com" title="Contact me">
+      <i class='social fa fa-envelope'></i>
+      <span class="label">Email</span>
+    </a>
+  </li>
+  
+
+  </ul>
+</nav>
+</div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="panel-cover--overlay cover-slate"></div>
+    
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2016-07-10 12:15:00 +0800" itemprop="datePublished" class="post-meta__date date">2016-07-10</time> &#8226; <span class="post-meta__tags tags">iOS</span>
+    </div>
+    <h1 class="post-title">iOS中KV数据库LevelDB的编译和使用</h1>
+  </header>
+
+  <section class="post">
+    <p>LevelDB是Google公司重量级工程师<a href="http://research.google.com/people/jeff/index.html"><code>Jeff Dean</code></a>和<a href="http://research.google.com/people/sanjay/index.html"><code>Sanjay Ghemawat</code></a>发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。</p>
+
+<p>LevelDB开源并托管在GitHub上，项目的地址是：<a href="https://github.com/google/leveldb">https://github.com/google/leveldb</a>。</p>
+
+<p>有个来自LevelDB官方对LevelDB、TreeDB和SQLite3进行性能对比分析的测试，测试结果如下图所示：</p>
+
+<p><img src="/images/ios-leveldb/leveldb-speed.png" alt="leveldb-speed.png"></p>
+
+<p>结果显示，在顺序读写和随机写上，LevelDB 在性能上都遥遥领先。</p>
+
+<h3>编译iOS静态库</h3>
+
+<h4>1.下载代码到本地</h4>
+
+<p><code>git clone https://github.com/google/leveldb.git</code></p>
+
+<h4>2.编译项目代码</h4>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">cd leveldb
+CXXFLAGS=-stdlib=libc++ make PLATFORM=IOS
+</code></pre></figure>
+<p>如果出现如下报错信息：</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">c++ -stdlib=libc++ -I. -I./include -std=c++0x  -DOS_MACOSX -DLEVELDB_PLATFORM_POSIX -DLEVELDB_ATOMIC_PRESENT -O2 -DNDEBUG -fPIC -c db/builder.cc -o /db/builder.o
+error: unable to open output file &#39;/db/builder.o&#39;: &#39;Operation not permitted&#39;
+1 error generated.
+make: *** [/db/builder.o] Error 1
+</code></pre></figure>
+<p>使用<code>sudo CXXFLAGS=-stdlib=libc++ make PLATFORM=IOS</code>这行命令即可。</p>
+
+<p>说明：</p>
+
+<p>（1）编译完成之后在<code>out-ios-universal</code>这个目录下面会自动生成<code>libleveldb.a</code>和<code>libmemenv.a</code>两个文件。</p>
+
+<p>（2）可以用<code>lipo -info libleveldb.a</code>检测生成的静态库支持的架构情况。默认支持<code>armv6 armv7 armv7s i386 x86_64 arm64</code>所有的架构</p>
+
+<p>（3）头文件在<code>include</code>目录下面，后面会用到</p>
+
+<h3>在iOS中使用LevelDB</h3>
+
+<p>LevelDB提供的是C++的API，可以在<code>https://rawgit.com/google/leveldb/master/doc/index.html</code>这里查到具体的使用说明。使用C++确实是不太方便幸好有大神将这些接口使用Objective-C进行了一下包装，使用方式和NSUserDefaults一致，可以参考<a href="http://www.tanhao.me/pieces/1397.html">《轻量级的KV数据库LevelDB在Objective-C上的应用》</a>这篇文章。</p>
+
+<p>为了便于使用和项目集成我将这个和编译好的静态库放在了一起做成一个库。可以直接使用CocoaPods进行集成。</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">pod &#39;leveled-pd&#39;, :git =&gt; &#39;https://github.com/hhtczengjing/leveldb-pd.git&#39;
+</code></pre></figure>
+<p>(1)初始化数据库</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+NSString *pageDBPath = [docPath stringByAppendingPathComponent:@&quot;my_leveldb.ldb&quot;];
+THLevelDB *myLevelDB = [THLevelDB levelDBWithPath:pageDBPath];
+</code></pre></figure>
+<p>(2)存储数据</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">[myLevelDB setString:@&quot;hello world&quot; forKey:@&quot;username&quot;];
+</code></pre></figure>
+<p>(3)读取数据</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">NSString *str = [myLevelDB stringForKey:@&quot;username&quot;];
+</code></pre></figure>
+<p>没错就是这样方便。</p>
+
+<h3>参考资料</h3>
+
+<p>1.<a href="https://github.com/google/leveldb">《Github Project Home》</a></p>
+
+<p>2.<a href="https://rawgit.com/google/leveldb/master/doc/index.html">《LevelDB library documentation》</a></p>
+
+<p>3.<a href="http://www.tanhao.me/pieces/1397.html">《轻量级的KV数据库LevelDB在Objective-C上的应用》</a></p>
+
+<p>4.<a href="http://blog.txx.im/blog/2014/01/20/build-leveldb/">《编译leveldb for iOS》</a></p>
+
+<p>5.<a href="http://blog.nosqlfan.com/html/2819.html">《LevelDB、TreeDB、SQLite3性能对比测试》</a></p>
+
+  </section>
+</article>
+
+<section class="read-more">
+   
+   
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">更早的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/blog/first.html" title="link to 我为什么写博客？">我为什么写博客？</a></h2>
+       <p class="excerpt">注我讲注解放到最上面来就是想告诉你们这群乱入的年轻人，以下全是一个大龄九零后傲娇言辞，建议你们速速离去，我只想说，没有被这篇文章而耽误生命的人真的是太好了。.第一篇Blog写博客的主要目的是什么，这往往是我一开始就想要说的。Github是一个开源技术社区，在这上面写博客往往是被贴上技术的标签，所以在这一层上看，将来的博客可能都将是关于技术，但也可能不是。不管怎样，我今天至少尝试在继续写博客而且跨出了一大步，至少这样看到还是挺好的。我是谁我是一个大龄九零后，目前在深圳从事桌面云相关开发，主要...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2016-07-10 12:15:00 +0800" class="post-list__meta--date date">2016-07-10</time> &#8226; <span class="post-list__meta--tags tags">为什么要在Github上写博客</span><a class="btn-border-small" href=/blog/first.html>继续阅读</a></div>
+   </div>
+   
+</section>
+
+<section class="post-comments">
+  
+  
+  
+  
+</section>
+
+
+            <section class="footer">
+    <footer>
+    	<span class="footer__copyright">本站点采用<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享 署名-非商业性使用-相同方式共享 4.0 国际 许可协议</a></span>
+        <span class="footer__copyright">由 <a href="https://jekyllrb.com">Jekyll</a> 于 2016-07-19 生成，感谢<a href="https://gitcafe.com/signup?invited_by=zengjing">GitCafe</a>和<a href="https://github.com">GitHub</a>为本站提供存储空间.</span>
+        <span class="footer__copyright">本站由 <a href="http://xiaobaiso.me">@xiaobaiso</a> 创建，采用 <a href="https://github.com/onevcat/vno-jekyll">Vno - Jekyll</a> 作为主题，您可以在 GitHub 找到<a href="https://github.com/hhtczengjing/hhtczengjing.github.com">本站源码</a> - &copy; 2016</span>
+    </footer>
+</section>
+
+
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript" src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+    
+  </body>
+
+</html>

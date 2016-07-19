@@ -1,11 +1,11 @@
 # Basic
-title: 曾静的技术博客
-subtitle: 但行好事，莫问前程.
-welcome_message: 这是我用来记录平日学习笔记的地方，欢迎您的访问.
-description: 嗨，我是曾静 (@devzeng)，iOS开发新人，目前暂居深圳。
-creator: <a href="http://www.devzeng.com">@devzeng</a>
+title: 小白的技术宅
+subtitle: 遇见更好的自己.
+welcome_message: 这是我用来记录生活和技术的地方，欢迎你的访问.
+description: 嗨，我是小白，从事Linux以及iOS相关的工作，目前暂居深圳。
+creator: <a href="http://xiaobaiso.me">@xiaobaiso</a>
 
-url: "http://blog.devzeng.com"
+url: "http://xiaobaiso.github.io"
 
 permalink: /blog/:title.html
 
@@ -25,8 +25,9 @@ blog_button:
 
 # Navigation buttons in the front page.
 nav:
-    - {title: 关于, description: 了解更多关于我, url: '#'}
-    # - {title: Another Button, description: A button, url: 'http://example.com'}
+    - {title: 项目, description: 了解相关项目, url: 'http://github.com/xiaobaiso'}
+    - {title: 关于, description: 了解更多关于我, url: '#'}    
+# - {title: Another Button, description: A button, url: 'http://example.com'}
 
 # Pagination
 gems: [jekyll-paginate]
@@ -40,11 +41,11 @@ paginate_path: "page/:num/"
 
 # Social
 social:
-    weibo: devzeng
-    github: hhtczengjing
-    twitter: hhtczengjing
+    #weibo: devzeng
+    github: xiaobaiso
+    #twitter: hhtczengjing
     #gplus: 107108267983477358170
-    mail: hhtczengjing@gmail.com
+    mail: xbcoding@gmail.com
 
 # Google Analytics
 ga:

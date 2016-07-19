@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title>基于树莓派的微信服务器</title>
+  <meta name="description" content="微信公众平台首先要去了解这个东西，去看官方的手册及博客，网上面关于微信公众号的后台接入有三个解决办法，">
+  <meta name="author" content="zengjing">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="基于树莓派的微信服务器">
+  <meta name="twitter:description" content="微信公众平台首先要去了解这个东西，去看官方的手册及博客，网上面关于微信公众号的后台接入有三个解决办法，">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="基于树莓派的微信服务器">
+  <meta property="og:description" content="微信公众平台首先要去了解这个东西，去看官方的手册及博客，网上面关于微信公众号的后台接入有三个解决办法，">
+  
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+  <link href="/assets/images/favicon.png" rel="shortcut icon" type="image/png">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="canonical" href="http://xiaobaiso.github.io/blog/raspberry-wechat.html">
+  <link rel="alternate" type="application/rss+xml" title="小白的技术宅" href="http://xiaobaiso.github.io/feed.xml">
+  
+  <meta name="google-site-verification" content="1-1ZlHoRvM0T2FqPbW2S-qLgYXN6rsn52kErlMPd_gw" />
+
+  <script>
+  	var _hmt = _hmt || [];
+	(function() {
+  		var hm = document.createElement("script");
+  		hm.src = "//hm.baidu.com/hm.js?9bd8b5838b97bdb84f93cef73b8878a9";
+  		var s = document.getElementsByTagName("script")[0]; 
+  		s.parentNode.insertBefore(hm, s);
+	})();
+  </script>
+
+</head>
+
+
+  <body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+    
+    <header class="panel-cover panel-cover--collapsed" style="background-image: url('/assets/images/background-cover.jpg')">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/#blog" title="前往 小白的技术宅 的主页" class="blog-button"><img src="/assets/images/avatar.jpg" width="80" alt="小白的技术宅 logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/#blog" title="link to homepage for 小白的技术宅" class="blog-button">小白的技术宅</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">遇见更好的自己.</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">嗨，我是小白，从事Linux以及iOS相关的工作，目前暂居深圳。</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+        
+        <p class="panel-cover__description">这是我用来记录生活和技术的地方，欢迎你的访问.</p>
+        
+        
+        <div class="navigation-wrapper">
+          <div>
+            <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+                
+                  <li class="navigation__item"><a href="http://github.com/xiaobaiso" target="_blank" title="了解相关项目">项目</a></li>
+                
+                  <li class="navigation__item"><a href="#" target="_blank" title="了解更多关于我">关于</a></li>
+                
+              </ul>
+            </nav>
+          </div>
+          
+          <div><nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  
+
+  
+  <!-- Github -->
+  <li class="navigation__item">
+    <a href="https://github.com/xiaobaiso" title="@xiaobaiso 的 Github" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+  
+  
+  
+
+  
+
+  <!-- RSS -->
+  <li class="navigation__item">
+    <a href="/feed.xml/" rel="author" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+  
+  <!-- Email -->
+  <li class="navigation__item">
+    <a href="mailto:xbcoding@gmail.com" title="Contact me">
+      <i class='social fa fa-envelope'></i>
+      <span class="label">Email</span>
+    </a>
+  </li>
+  
+
+  </ul>
+</nav>
+</div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="panel-cover--overlay cover-slate"></div>
+    
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2016-02-11 00:00:00 +0800" itemprop="datePublished" class="post-meta__date date">2016-02-11</time> &#8226; <span class="post-meta__tags tags"></span>
+    </div>
+    <h1 class="post-title">基于树莓派的微信服务器</h1>
+  </header>
+
+  <section class="post">
+    <h2>微信公众平台</h2>
+
+<p>首先要去了解这个东西，去看官方的手册及博客，网上面关于微信公众号的后台接入有三个解决办法，</p>
+
+<ul>
+<li>使用微信推荐的后端平台，这个到公众号里面去找就能看到，这个相当于腾讯找人代理帮你搞定后端了。</li>
+<li>使用sae和gae这样的平台来部署自己的应用程序。</li>
+<li>使用自己的服务器，公有云独立ip。这三个办法都可以，网上介绍的一堆一堆的，在国内购买公有云手续比较复杂，我推荐用digitalocean，国外的服务器，推荐新加坡部署的服务器，<font color="#FF0000" >使用我的推荐链接，注册成功后有10刀的返现，<a href="https://m.do.co/c/e5afac993be8">点击这里</a>，拿好不谢。</font></li>
+</ul>
+
+<p>这个有点意思，我研究了一会儿，发现使用后端服务器接入微信公众号是可以的，我将公有云上的一台服务器做了后端，在后端接入了一个类似微软小冰的API，然后跑起来，效果还可以，但是我想让这个微信server放到树莓派上跑起来。由于微信要80端口，而这个端口又被内网封掉了，有个思路，一个是使用公有云上的server做代理，就是借他的端口一用，这个办法肯定是可以的，但是总是转发消息肯定不好，而且微信要求5秒钟就必须回应消息，而我那服务器架在新加坡，转发肯定很慢的，在想要不要做成server-client的架构，server和微信实时交互，部署client在树莓派上，命令消息异步执行，这样看看能不能避免超时带来的问题，而且这样可以不用公开里面的80端口。</p>
+
+<p>这里是设计思路，<strong>即消息先从用户发至微信服务器，服务器再与我的服务器交互，我的这个服务器就是微信公众号的后端服务器，而树莓派上面再与这个服务器交互，这样有多个树莓派时都可以同时控制。</strong></p>
+
+<p>树莓派与微信服务器的交互这个就ssh就可以了，端口转发就好了，上一篇文章有介绍，<del>也可以用花生壳</del>。</p>
+
+<p>微信服务器与微信交互，这个有很多开源的方案，python啊，java啊，php啊，网上一搜一大堆，我直接fork了<a href="https://github.com/gzb1985/doumibook_weixin">这里</a>，直接可以架构就可以了，说几个遇到的坑是：别人的代码里面要把他的Token去掉，<strong>（发现好多github上面的代码大家传上去都不检查去掉关键信息的）</strong>，然后填写正确的，如果是用的自己的服务器，记得防火墙开80端口。还有就是必须要5s内回复，看下手册把，貌似也有办法延时，但是我基本上不搞什么很复杂的东西。</p>
+
+<h2>图灵机器人</h2>
+
+<p>这个介绍很多，要尝鲜的可以试一试，我用的是<a href="http://www.xiaodoubi.com/">小逗比</a>，它提供了API接口：</p>
+<figure class="highlight"><pre><code class="language-text" data-lang="text">http://www.xiaodoubi.com/xiaoiapi.php?msg=关键字
+</code></pre></figure>
+<p>就是每一句都没关联，这个毕竟没法绑定人物，单句也只能这样。
+<img src="http://7xr0og.com1.z0.glb.clouddn.com/Screenshot_2016-02-18-15-19-11.jpeg%20=200x330" alt="vnc" title="这是vnc的图标"></p>
+
+<h2>通过微信发送命令给树莓派</h2>
+
+<p>制作这个主要是想在家里时不时看看公司服务器运转的情况，用ssh当然没有问题，但是用微信不是更爽。</p>
+
+<p>命令在哪里执行其实没有区别，在树莓派上面执行就通过端口转发过来就可以了，在本地执行也没有问题，到网上看了下，好像也就<a href="https://www.v2ex.com/t/75522">这里</a>提到了一下 没有看到可行的思路，</p>
+
+<p>我的做法是在用两个ssh，一个用户接收命令，一个去执行，将执行后的结果取出传给微信。在树莓派上执行需要多加一步就是预先ssh登录上，将这个ssh端口绑定到执行的那个终端上就可以了，<strong>（也可以考虑ssh无密码登录）</strong>，我简单实现一个版本，稍后放出代码来。</p>
+
+<p><img src="http://7xr0og.com1.z0.glb.clouddn.com/Screenshot_2016-02-18-15-11-12.jpeg" alt="vnc"></p>
+
+<p>这个图的“[&amp; #39;” 这个是终端的颜色方案，可是在bash配置里面去掉颜色方案，不过凑合凑合也可以使用。</p>
+
+  </section>
+</article>
+
+<section class="read-more">
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">最近的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/blog/usb-start.html" title="link to 关于USB重定向和读写控制">关于USB重定向和读写控制</a></h2>
+       <p class="excerpt">前提使用的是qemu+spice_gtk+virt_viewer来做这个事情的，不过走了一些弯路，之前由于拿到这一块是用的是spicec的代码，在其上加入usb重定向的东西，不过这个spicec目前是不推荐使用的，官方早就推荐了用remote-viewer，故走了两个版本，一个版本是使用spicec加上重定向代码，还有一个是用spice-gtk上用其代码，但是要加入管控，两个版本都做了，觉得spice-gtk加上禁止，只读控制还是好一点。最后发现坐在qemu上最好Mass Storage协...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2016-02-12 00:00:00 +0800" class="post-list__meta--date date">2016-02-12</time> &#8226; <span class="post-list__meta--tags tags"></span><a class="btn-border-small" href=/blog/usb-start.html>继续阅读</a></div>
+   </div>
+   
+   
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">更早的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/blog/IOS%E4%B8%8B%E5%9B%BE%E7%89%87%E6%A8%A1%E7%B3%8A%E5%8C%96.html" title="link to IOS下的图片模糊化模糊化">IOS下的图片模糊化模糊化</a></h2>
+       <p class="excerpt">起因最近在模仿苹果端网易云音乐客户端，在进入音乐那里特别喜欢图片毛玻璃的效果，这个看了下网上，有开源的设计，但是封装的很蛋疼，而且最恶心的是，为啥接口和实现不分开呢。基于这点，我对实现进行了封装。接口初始化并设置蒙版的颜色-(ANBlurredImageView *)initWithBlurAmount:(CGFloat)amount withTintColor:(UIColor *)color;默认的模糊化设置-(void)blurredImageViewDefault;默认的清晰化的设...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2015-11-19 00:00:00 +0800" class="post-list__meta--date date">2015-11-19</time> &#8226; <span class="post-list__meta--tags tags"></span><a class="btn-border-small" href=/blog/IOS%E4%B8%8B%E5%9B%BE%E7%89%87%E6%A8%A1%E7%B3%8A%E5%8C%96.html>继续阅读</a></div>
+   </div>
+   
+</section>
+
+<section class="post-comments">
+  
+  
+  
+  
+</section>
+
+
+            <section class="footer">
+    <footer>
+    	<span class="footer__copyright">本站点采用<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享 署名-非商业性使用-相同方式共享 4.0 国际 许可协议</a></span>
+        <span class="footer__copyright">由 <a href="https://jekyllrb.com">Jekyll</a> 于 2016-07-19 生成，感谢<a href="https://gitcafe.com/signup?invited_by=zengjing">GitCafe</a>和<a href="https://github.com">GitHub</a>为本站提供存储空间.</span>
+        <span class="footer__copyright">本站由 <a href="http://xiaobaiso.me">@xiaobaiso</a> 创建，采用 <a href="https://github.com/onevcat/vno-jekyll">Vno - Jekyll</a> 作为主题，您可以在 GitHub 找到<a href="https://github.com/hhtczengjing/hhtczengjing.github.com">本站源码</a> - &copy; 2016</span>
+    </footer>
+</section>
+
+
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript" src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+    
+  </body>
+
+</html>
