@@ -1,14 +1,52 @@
-auto: true
-uyan: xumenger
-markdown: kramdown
-kramdown:
-       input: GFM
-       hard_wrap: false
-pygments: false
-paginate: 8
-permalink: /:title
+# Basic
+title: 曾静的技术博客
+subtitle: 但行好事，莫问前程.
+welcome_message: 这是我用来记录平日学习笔记的地方，欢迎您的访问.
+description: 嗨，我是曾静 (@devzeng)，iOS开发新人，目前暂居深圳。
+creator: <a href="http://www.devzeng.com">@devzeng</a>
 
-title: 小白的狗窝
-url: http://xiaobaiso.github.io/
-feed: /atom.xml
-author_info: <a href="http://xiaobaiso.github.io/">Xiaobaiso</a>
+url: "http://blog.devzeng.com"
+
+permalink: /blog/:title.html
+
+# Format
+highlighter: plain
+markdown: redcarpet
+redcarpet:
+  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", tables]
+
+# supported colors: blue, green, purple, red, orange or slate. If you need clear, leave it empty.
+cover_color: slate
+
+# The blog button should not be removed.
+blog_button:
+    title: 博客
+    description: 访问博客
+
+# Navigation buttons in the front page.
+nav:
+    - {title: 关于, description: 了解更多关于我, url: '#'}
+    # - {title: Another Button, description: A button, url: 'http://example.com'}
+
+# Pagination
+gems: [jekyll-paginate]
+paginate: 10
+paginate_path: "page/:num/"
+
+# Comment
+#comment:
+    #disqus: vno-jekyll
+    # duoshuo:
+
+# Social
+social:
+    weibo: devzeng
+    github: hhtczengjing
+    twitter: hhtczengjing
+    #gplus: 107108267983477358170
+    mail: hhtczengjing@gmail.com
+
+# Google Analytics
+ga:
+    # id: your_ga_id
+    # host: your_host
