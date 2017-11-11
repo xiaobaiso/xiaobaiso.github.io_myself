@@ -1,0 +1,91 @@
+---
+layout:     post
+title:      典瑞
+category: project
+description: 典瑞
+---
+
+##一、起因
+
+最近在写一个临时邮件的项目，前后端都是自己写，前台用OC+Swift混编，后台用python搭建，数据存储用mysql，有了上一个项目的经验，这个项目很快就有了一些进展。
+
+在这个项目中，由于涉及到通信协议Http的加密，所以在这里考虑到尽可能的便捷性，使用了较为原始的Authorization来认证通信内容。事实上，个人项目其实不用太在加解密上面花费功夫。在python中，使用flask的@app.before_request就可以轻易做到这一点。
+
+在iOS这一端，授权使用了http头部的Authorization Header，就是在http的头部放入了授权的账号和密码，如果没有这个头部字段，那么flask就不接受该请求。Authorization Header 字段使用了name:password再base64的方式加密信息，所以实际上，这个相当于明文传输，需要配合https使用。
+
+但是这次项目连调遇到了问题有两个
+ 
+#####  1.后端发现，如果传入的url地址不是以/结尾的，那么就会出现一个redict重定向的说明。并且发现，url中@符号也被转码成了%40.
+ 
+##### 2.另一个问题是，使用iOS请求，有的时候请求头部有Authorization Header，有的时候没有
+
+##二、被更换的协议地址
+
+如图所示，上面4个错误的原因是，http的头部丢失了Authorization Header，最下面的成功了，头部包含有Authorization Header。注意了，上面4个错误，通过抓包软件看，结尾都有/，他们之间的区别只有两个，一个是头部Authorization Header丢失，第二个是@符号被转码，这两个奇怪的情况直接导致了后台一系列的错误。
+
+首先可以定位到iOS这边肯定有问题，请求的头部会丢失只能和iOS有关，测试发现，如果请求的url最后带有/结尾，那么Authorization Header就不会丢失，如果不是/结尾，就丢失该头部。这个问题困扰我很久，网上也有相关讨论https://stackoverflow.com/questions/18885587/nsurlconnection-authorization-header-not-working 网上的说法就是，必须加上/，原因大家都不知道为何。
+
+另一个问题就是服务端的问题。事实上包括python在内的很多framework都有这个问题。这个flask如果发现不是以/结尾的url，就会出现重定向提示，所以在flask中，加入app.url_map.strict_slashes = False 来信任没有/结尾的url。
+
+最后解释下，上面提到的问题，这个问题可以引申出很多知识点，一个个来讲。
+
+1.根据抓包分析
+>上面4个请求确实的url是
+>http://localhost.charlesproxy.com:20000/v1/mail/12345%40mail.xiaobaiso.xin/ 
+而最下面成功的url是
+>http://localhost.charlesproxy.com:20000/v1/mail/12345@mail.xiaobaiso.xin/ 
+
+
+仔细看，最后确实都是/结尾，但是@符号被转义了，为什么这里被转义了，实际上是这样的，在网络传输中，get请求参数都是在地址背后的，大多是?key=value,那么如果key和value包含有特殊字符，比如=符号，那么就需要转码，以便服务端解析能够按照=进行参数截取。所以这里@符号被转码，说明了12345%40mail.xiaobaiso.xin其实是这个地址的请求参数。
+
+2.补充一个知识点，在AFN的get方法中，是可以使用param的，很多人都忽略这一点，事实上这一点很重要，比如：
+
+>
+ GET:@"https://www.baidu.com/s?ie=UTF-8&wd=%E6%B1%89%E5%AD%97%26ss"
+ parameters:nil
+ success:nil
+ failure:nil
+ 
+
+>
+ GET:@"https://www.baidu.com/s"
+ parameters:@{@"ie":@"UTF-8",@"wd":@"汉字&ss"};
+ success:nil
+ failure:nil
+ 
+注意这里，使用了下面方法的话，那么汉字&ss将会被完美编码，具体可以去看一下AFN的源码，具体实现函数是：URLEncodedStringValue，这里可以看到AFN帮我们编码的字符集是：
+
+```
+ static NSString * const kAFCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
+ static NSString * const kAFCharactersSubDelimitersToEncode = @"!$&'()*+,;=";
+
+``` 
+这些都会被编码，甚至afn还解决了url中存在emoji符号，所以推荐使用下面这一种。
+
+3、我们再回来看，实际上如果用户再往url中传入一个非/结尾的地址，stringByAddingPercentEscapesUsingEncodin还是会把最后的参数进行编码，所以这里@符号被编码了。但是为什么抓包软件看到的是有/结尾的呢？这是因为AFN的帮助，如果你使用AFN的方式是用baseurl的方式，那么你拼接上结尾不是/的地址，AFN都会将它视为参数，先进行完美编码，然后再补上/。但是如果你不是用的baseurl的使用方式，那么不会有这个问题。那么这个问题是在ytk中有个连接方法
+
+```
+- (NSString *)buildRequestUrl:(YTKBaseRequest *)request
+ [NSURL URLWithString:detailUrl  
+```
+ relativeToURL:url].absoluteString; 这个方法使用有点坑，要这么看：
+ 
+```
+ NSURL *baseURL = [NSURL URLWithString:@"http://example.com/v1/"];
+ 
+ [NSURL URLWithString:@"foo" relativeToURL:baseURL];                  // http://example.com/v1/foo
+ [NSURL URLWithString:@"foo?bar=baz" relativeToURL:baseURL];          // http://example.com/v1/foo?bar=baz
+ [NSURL URLWithString:@"/foo" relativeToURL:baseURL];                 // http://example.com/foo 注意这里
+ [NSURL URLWithString:@"foo/" relativeToURL:baseURL];                 // http://example.com/v1/foo
+ [NSURL URLWithString:@"/foo/" relativeToURL:baseURL];                // http://example.com/foo/
+ [NSURL URLWithString:@"http://example2.com/" relativeToURL:baseURL]; // http://example2.com/ 
+```
+
+这下明白为什么我们没有加/，但是又有了/吧。
+
+
+
+-----
+
+<div align = right>来自某天的胡言乱语</div>
+
