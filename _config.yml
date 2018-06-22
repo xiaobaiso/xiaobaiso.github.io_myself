@@ -26,8 +26,9 @@ blog_button:
 # Navigation buttons in the front page.
 nav:
     - {title: 项目, description: 了解相关项目, url: 'http://github.com/xiaobaiso'}
-    - {title: 作品, description: 临时邮, url: 'https://xiaobaiso.me/tempmail/'}
+    - {title: 临时邮说明, description: 临时邮, url: 'https://xiaobaiso.github.io/tempmail/'}
     - {title: 临时邮, description: 临时邮, url: 'https://itunes.apple.com/cn/app/%E4%B8%B4%E6%97%B6%E9%82%AE-%E5%8D%81%E5%88%86%E9%92%9F%E9%82%AE%E7%AE%B1/id1342693449?mt=8'}
+    - {title: 知乎视频爬虫, description: 视频下载小助手, url: 'https://xiaobaiso.github.io/zhihudoc/'}
 # - {title: Another Button, description: A button, url: 'http://example.com'}
 
 # Pagination
