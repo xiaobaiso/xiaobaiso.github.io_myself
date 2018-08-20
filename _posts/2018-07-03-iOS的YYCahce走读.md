@@ -180,6 +180,15 @@ cost最直观的应该是这个数据的消耗大小，当然也可以是其他�
 @end
 ```
 
+将这些YYKVStorageItem串起来的是_globalInstances
+
+```
+/// weak reference for all instances
+static NSMapTable *_globalInstances;
+static dispatch_semaphore_t _globalInstancesLock;
+```
+NSMapTable 是 NSDictionary 的通用版本，这个类应该是NS框架内最不起眼的类吧，他们是在iOS 6中添加的类，用于解决想存储弱引用的值，或者使用一个没有遵守 <NSCopying> 的对象作为键，这种情况下，可以使用NSMapTable来存取数据。[这里](https://nshipster.cn/nshashtable-and-nsmaptable/)是关于他的介绍。
+
 这个就是用来描述一个存储对象的结构，其中，filename这个字段是用来标识，存储到文件系统，还是存储到sqlite的，而这个filename是怎么设置的？
 ```
 - (void)setObject:(id<NSCoding>)object forKey:(NSString *)key {
@@ -248,3 +257,5 @@ cost最直观的应该是这个数据的消耗大小，当然也可以是其他�
 
 ```
 差不多可以看出，数据item是先存到数据库sqlite里面去的。至于value这个到底存到哪里，取决于是否大于默认的20KB。get方法与此类似，故不做赘述。
+
+
